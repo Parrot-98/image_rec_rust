@@ -1,11 +1,11 @@
 use mnist::{Mnist, MnistBuilder};
 
-pub fn load_data() {
+pub fn load_data() -> (Vec<f32>, Vec<u8>, Vec<f32>, Vec<u8>){
     let Mnist { 
         trn_img,
         trn_lbl,
-        tst_img: _tst_img,
-        tst_lbl: _tst_lbl,
+        tst_img,
+        tst_lbl,
         ..
     } = MnistBuilder::new()
         .label_format_digit()
@@ -18,15 +18,17 @@ pub fn load_data() {
         .test_labels_filename("t10k-labels.idx1-ubyte")
         .finalize();
 
-    let first_label = trn_lbl[0];
-
-    let first_image_pixels_raw = &trn_img[0..784]; 
-
-    let first_image_pixels_normalized: Vec<f32> = first_image_pixels_raw
+    let trn_img_normalized: Vec<f32> = trn_img
         .iter()
         .map(|&pixel| pixel as f32 / 255.0)
         .collect();
 
-    println!("first image: {}", first_label);
-    println!("pixel count: {}", first_image_pixels_normalized.len());
+    let tst_img_normalized: Vec<f32> = tst_img
+        .iter()
+        .map(|&pixel| pixel as f32 / 255.0)
+        .collect();
+
+    (trn_img_normalized, trn_lbl, tst_img_normalized, tst_lbl)
+
+
 }
