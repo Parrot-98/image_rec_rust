@@ -1,6 +1,7 @@
-use ndarray::{Array1, ArrayBase, ArrayView2};
-use crate::layers::Layer; 
+use ndarray::{Array1, ArrayView2};
+use crate::layers::Layer;
 use crate::math;
+use std::time::Instant;
 
 pub fn train(
     training_matrix: &ArrayView2<f32>,
@@ -10,6 +11,7 @@ pub fn train(
     layer3: &Layer,
 ) -> Array1<f32> {
     for i in 0..training_matrix.nrows() {
+        let start_time = Instant::now();
         let input_layer = training_matrix.row(i);
         let _correct_label = labels[i];
 
@@ -25,6 +27,8 @@ pub fn train(
         let output_non_bias = math::multiply(&second_hidden_layer.view(), &layer3.weights.view());
         let output = math::add(&output_non_bias.view(), &layer3.bias.view());
 
+        let duration = start_time.elapsed();
+        println!("time is: {}", duration.as_millis());
         return output;
 
     }
