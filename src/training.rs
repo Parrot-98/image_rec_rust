@@ -1,35 +1,33 @@
-use ndarray::{Array1, ArrayView1, ArrayView2};
+use ndarray::{Array1, ArrayBase, ArrayView2};
+use crate::layers::Layer; 
 use crate::math;
 
 pub fn train(
     training_matrix: &ArrayView2<f32>,
-    weights: &ArrayView2<f32>,
-    weights_two: &ArrayView2<f32>,
-    weights_three: &ArrayView2<f32>,
-    bias: &ArrayView1<f32>,
-    bias_two: &ArrayView1<f32>,
-    bias_three: &ArrayView1<f32>,
-) {
-    
-    for i in 0..training_matrix.len() {
-        //calc 1
+    labels: &Vec<u8>,
+    layer1: &Layer,
+    layer2: &Layer,
+    layer3: &Layer,
+) -> Array1<f32> {
+    for i in 0..training_matrix.nrows() {
         let input_layer = training_matrix.row(i);
+        let _correct_label = labels[i];
 
-        let weights_input_layer = weights;
-        let first_hidden_layer_non_bias = math::multiply(&input_layer, weights_input_layer);
-        let first_hidden_layer = math::add(&first_hidden_layer_non_bias.view(), &bias);
+        // calc 1
+        let first_hidden_layer_non_bias = math::multiply(&input_layer, &layer1.weights.view());
+        let first_hidden_layer = math::add(&first_hidden_layer_non_bias.view(), &layer1.bias.view());
 
         // calc 2
-        let weights_hidden_layer_one = weights_two;
-        let second_hidden_layer_non_bias = math::multiply(&first_hidden_layer.view(), &weights_hidden_layer_one);
-        let second_hidden_layer = math::add(&second_hidden_layer_non_bias.view(), &bias_two);
+        let second_hidden_layer_non_bias = math::multiply(&first_hidden_layer.view(), &layer2.weights.view());
+        let second_hidden_layer = math::add(&second_hidden_layer_non_bias.view(), &layer2.bias.view());
 
-        //calc 3
-        let weights_hidden_layer_two = weights_three;
-        let third_hidden_layer_non_bias = math::multiply(&second_hidden_layer.view(), &weights_hidden_layer_two);
-        let output_layer = math::add(&third_hidden_layer_non_bias.view(), &bias_three);
+        // calc 3
+        let output_non_bias = math::multiply(&second_hidden_layer.view(), &layer3.weights.view());
+        let output = math::add(&output_non_bias.view(), &layer3.bias.view());
 
-        
+        return output;
+
     }
 
+    Array1::zeros(10) // in case the top part fails(requierd)
 }

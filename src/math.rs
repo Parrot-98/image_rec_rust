@@ -7,10 +7,6 @@ pub fn multiply(data: &ArrayView1<f32>, data2: &ArrayView2<f32>) -> Array1<f32> 
     result
 }
 
-pub fn multiply_same(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32> {
-    let result = data * data2;
-    result
-}
 // has tho be the same lenght
 pub fn add(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32>{
     if data.len() != data2.len() {

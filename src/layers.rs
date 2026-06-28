@@ -2,20 +2,9 @@ use ndarray::{Array1, Array2};
 use ndarray_rand::RandomExt; 
 use ndarray_rand::rand_distr::Normal;
 
-enum Types {
-    Input,
-    Hidden,
-    Output,
-}
-
 pub struct Layer {
     pub weights: Array2<f32>,
     pub bias: Array1<f32>, 
-}
-
-struct ActivationNodes {
-    kind: Types,
-    values: Vec<f32>,
 }
 
 impl Layer {
@@ -30,7 +19,7 @@ impl Layer {
     }
 
 
-    pub fn get_data(data: Vec<f32>, ans: Vec<u8>) -> Array2<f32> {
+    pub fn get_data(data: Vec<f32>) -> Array2<f32> {
         let total_pixels = data.len();
         let total_images = total_pixels / 784;
 
