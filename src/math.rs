@@ -17,3 +17,17 @@ pub fn add(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32>{
         result
     }
 }
+
+pub fn relu(data: &ArrayView1<f32>) -> Array1<f32> {
+    let result = data.map(|&x| if x > 0.0 { x } else { 0.0 });
+    result
+}
+
+pub fn cost(predictions: &ArrayView1<f32>, targets: &ArrayView1<f32>) -> f32 {
+    let error = targets - predictions;
+    let squared_error = error.mapv(|x| x.powi(2));
+    
+    let result = 0.5 * squared_error.sum();
+    result
+}
+

@@ -2,13 +2,12 @@ mod load_data;
 mod layers;
 mod math;
 mod training;
+mod backpropagation;
 
 fn main() {
     let (trn_img_normalized, trn_lbl, _tst_img_normalized, _tst_lbl) = load_data::load_data();
 
     let training_matrix = layers::Layer::get_data(trn_img_normalized);
-    println!("Data matrix shape: {:?}", training_matrix.shape());
-    println!("{:?}", training_matrix.row(0));
 
     let first_hidden_layer = layers::Layer::new(784, 128);
     let second_hidden_layer = layers::Layer::new(128, 128);
