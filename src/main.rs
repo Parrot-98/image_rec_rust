@@ -14,10 +14,9 @@ fn main() {
     let third_hidden_layer = layers::Layer::new(128, 10);
 
 
+    let (weight_gradient, bias_gradient) = training::train(&training_matrix.view(), &trn_lbl, &first_hidden_layer, &second_hidden_layer, &third_hidden_layer, 1);
 
-
-    let training = training::train(&training_matrix.view(), &trn_lbl, &first_hidden_layer, &second_hidden_layer, &third_hidden_layer);
-
-    println!("{:?}", training);
+    println!("weight_gradient: {:?}", weight_gradient);
+    println!("bias_gradient: {:?}", bias_gradient);
 
 }
