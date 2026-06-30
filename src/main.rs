@@ -14,7 +14,7 @@ fn main() {
     let mut layer2 = layers::Layer::new(128, 128);
     let mut layer3 = layers::Layer::new(128, 10);
 
-    let epochs = 5;
+    let epochs = 50;
     let batch_size = 32;
 
     for epoch in 0..epochs {
@@ -23,7 +23,6 @@ fn main() {
         let num_samples = training_matrix.nrows();
 
         for i in (0..num_samples).step_by(batch_size) {
-            // Guard against out-of-bounds slicing on the last batch
             let end = std::cmp::min(i + batch_size, num_samples);
             let current_batch_size = end - i;
             if current_batch_size < batch_size { break; } 
@@ -44,6 +43,6 @@ fn main() {
         }
 
         let average_cost = total_cost / steps as f32;
-        println!("Epoch {} completed | Average Cost: {:.5}", epoch, average_cost);
+        println!("Epoch {} , Average Cost: {:.5}", epoch, average_cost);
     }
 }

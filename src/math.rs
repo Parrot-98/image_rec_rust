@@ -1,4 +1,4 @@
-use ndarray::{Array1, Array2, ArrayView1, ArrayView2, Axis};
+use ndarray::{ Array2, ArrayView1, ArrayView2};
 
 pub fn multiply(matrix: &ArrayView2<f32>, weights: &ArrayView2<f32>) -> Array2<f32> {
     matrix.dot(weights)
