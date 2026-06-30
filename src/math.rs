@@ -1,49 +1,28 @@
-use ndarray::{Array1, ArrayView1, ArrayView2};
-use std::process;
+use ndarray::{Array1, Array2, ArrayView1, ArrayView2, Axis};
 
-
-pub fn multiply(data: &ArrayView1<f32>, data2: &ArrayView2<f32>) -> Array1<f32> {
-    let result = data.dot(data2);
-    result
+pub fn multiply(matrix: &ArrayView2<f32>, weights: &ArrayView2<f32>) -> Array2<f32> {
+    matrix.dot(weights)
 }
 
-
-pub fn multiply_same(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32> {
-    let result = data * data2;
-    result
+// must be the same lenght
+pub fn add(matrix: &ArrayView2<f32>, bias: &ArrayView1<f32>) -> Array2<f32> {
+    matrix + bias
 }
 
-// has tho be the same lenght
-pub fn add(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32>{
-    if data.len() != data2.len() {
-        eprintln!("the data is not the same lenght {} , {}", data, data2);
-        process::exit(1);
-    } else {
-        let result = data + data2;
-        result
-    }
+pub fn relu(matrix: &ArrayView2<f32>) -> Array2<f32> {
+    matrix.mapv(|x| if x > 0.0 { x } else { 0.0 })
 }
 
-pub fn subtract(data: &ArrayView1<f32>, data2: &ArrayView1<f32>) -> Array1<f32>{
-    if data.len() != data2.len() {
-        eprintln!("the data is not the same lenght {} , {}", data, data2);
-        process::exit(1);
-    } else {
-        let result = data - data2;
-        result
-    }
+pub fn cost(output: &ArrayView2<f32>, target: &ArrayView2<f32>) -> f32 {
+    let diff = output - target;
+    let squared = &diff * &diff;
+    0.5 * squared.sum() / output.nrows() as f32
 }
 
-pub fn relu(data: &ArrayView1<f32>) -> Array1<f32> {
-    let result = data.map(|&x| if x > 0.0 { x } else { 0.0 });
-    result
+pub fn subtract(a: &ArrayView2<f32>, b: &ArrayView2<f32>) -> Array2<f32> {
+    a - b
 }
 
-pub fn cost(predictions: &ArrayView1<f32>, targets: &ArrayView1<f32>) -> f32 {
-    let error = targets - predictions;
-    let squared_error = error.mapv(|x| x.powi(2));
-    
-    let result = 0.5 * squared_error.sum();
-    result
+pub fn multiply_same(a: &ArrayView2<f32>, b: &ArrayView2<f32>) -> Array2<f32> {
+    a * b
 }
-
