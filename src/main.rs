@@ -13,15 +13,18 @@ fn main() {
     let mut second_hidden_layer = layers::Layer::new(128, 128);
     let mut third_hidden_layer = layers::Layer::new(128, 10);
 
-    for i in 0..training_matrix.nrows() {
+    for epoch in 0..training_matrix.nrows() {
         let cost = training::train(
             &training_matrix.view(),
             &trn_lbl,
-            &first_hidden_layer,
-            &second_hidden_layer,
+            &mut first_hidden_layer,
+            &mut second_hidden_layer,
             &mut third_hidden_layer,
-            i
+            epoch
         );
 
+        if epoch % 100 == 0 {
+            println!("cost: {}", cost);
+        }
     }
 }

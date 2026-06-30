@@ -1,18 +1,16 @@
 use ndarray::{Array1, ArrayView2};
 use crate::layers::Layer;
 use crate::{backpropagation, math};
-use std::time::Instant;
 
 pub fn train(
     training_matrix: &ArrayView2<f32>,
     labels: &Vec<u8>,
-    layer1: &Layer,
-    layer2: &Layer,
+    layer1: &mut Layer,
+    layer2: &mut Layer,
     layer3: &mut Layer,
     i: usize,
 ) -> f32  {
     // forward pass
-    let start_time = Instant::now();
     let input_layer = training_matrix.row(i);
     let correct_label = labels[i];
 
@@ -33,17 +31,34 @@ pub fn train(
     let output_non_bias = math::multiply(&second_hidden_layer.view(), &layer3.weights.view());
     let output = math::add(&output_non_bias.view(), &layer3.bias.view());
 
+    // backward pass
     let cost = math::cost(&output.view(), &target.view());
 
-    let (weight_gradient, bias_gradient) = backpropagation::backpropagation(&target.view(), &output.view(), &second_hidden_layer.view());
+    let (
+        layer_three_weight_gradient, layer_three_bias_gradient,
+        layer_two_weight_gradient, layer_two_bias_gradient,
+        layer_one_weight_gradient, layer_one_bias_gradient,
+    ) = backpropagation::backpropagation(&target.view(),
+        &output.view(), 
+        &layer3.weights.view(),
+        &layer2.weights.view(),
+        &second_hidden_layer.view(),
+        &first_hidden_layer.view(),
+        &input_layer.view(),
+    );
 
+
+    // update weights and bias
     let learning_rate = 0.001;
 
-    layer3.weights.scaled_add(-learning_rate, &weight_gradient);
-    layer3.bias.scaled_add(-learning_rate, &bias_gradient);
+    layer3.weights.scaled_add(-learning_rate, &layer_three_weight_gradient);
+    layer3.bias.scaled_add(-learning_rate, &layer_three_bias_gradient);
 
-    let duration = start_time.elapsed();
-    println!("time taken is: {:.3}ms", duration.as_secs_f32() * 1000.0);
+    layer2.weights.scaled_add(-learning_rate, &layer_two_weight_gradient);
+    layer2.bias.scaled_add(-learning_rate, &layer_two_bias_gradient);
+
+    layer1.weights.scaled_add(-learning_rate, &layer_one_weight_gradient);
+    layer1.bias.scaled_add(-learning_rate, &layer_one_bias_gradient);
 
     return cost;
 
