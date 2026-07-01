@@ -67,7 +67,7 @@ pub fn train(
             &batch_inputs.view(),
         );
 
-        let learning_rate = 0.05; // good numba
+        let learning_rate = 0.01; // good numba
 
         // update
         layer3.weights.scaled_add(-learning_rate, &layer_three_weight_gradient);

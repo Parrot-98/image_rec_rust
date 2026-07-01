@@ -22,7 +22,7 @@ pub fn backpropagation(
 
     {
         let delta_part_one = math::subtract(&output, &target);
-        let relu_derivative = output.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 });
+        let relu_derivative = output.mapv(|x| if x > 0.0 { 1.0 } else { 1.0 });
         delta_layer_three = math::multiply_same(&delta_part_one.view(), &relu_derivative.view());
 
         layer_three_bias_gradient = delta_layer_three.sum_axis(Axis(0)) / batch_size;
@@ -31,7 +31,7 @@ pub fn backpropagation(
 
     {
         let delta_passed_back = delta_layer_three.dot(&layer3_weights.t());
-        let relu_derivative = input_layer_three.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 });
+        let relu_derivative = input_layer_three.mapv(|x| if x > 0.0 { 1.0 } else { 1.0 });
         delta_layer_two = math::multiply_same(&delta_passed_back.view(), &relu_derivative.view());
 
         layer_two_bias_gradient = delta_layer_two.sum_axis(Axis(0)) / batch_size;
@@ -40,7 +40,7 @@ pub fn backpropagation(
 
     {
         let delta_passed_back = delta_layer_two.dot(&layer2_weights.t());
-        let relu_derivative = input_layer_two.mapv(|x| if x > 0.0 { 1.0 } else { 0.0 });
+        let relu_derivative = input_layer_two.mapv(|x| if x > 0.0 { 1.0 } else { 1.0 });
         let delta_layer_one = math::multiply_same(&delta_passed_back.view(), &relu_derivative.view());
 
         layer_one_bias_gradient = delta_layer_one.sum_axis(Axis(0)) / batch_size;

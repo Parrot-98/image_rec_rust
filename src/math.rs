@@ -10,7 +10,7 @@ pub fn add(matrix: &ArrayView2<f32>, bias: &ArrayView1<f32>) -> Array2<f32> {
 }
 
 pub fn relu(matrix: &ArrayView2<f32>) -> Array2<f32> {
-    matrix.mapv(|x| if x > 0.0 { x } else { 0.0 })
+   matrix.mapv(|x| if x > 0.0 { x } else { x * 0.01 })
 }
 
 pub fn cost(output: &ArrayView2<f32>, target: &ArrayView2<f32>) -> f32 {
