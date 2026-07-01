@@ -1,10 +1,12 @@
 use ndarray::{Array1, Array2};
-use ndarray_rand::RandomExt; 
+use ndarray_rand::RandomExt;
 use ndarray_rand::rand_distr::Normal;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Layer {
     pub weights: Array2<f32>,
-    pub bias: Array1<f32>, 
+    pub bias: Array1<f32>,
 }
 
 impl Layer {
